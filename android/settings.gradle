@@ -1,0 +1,2 @@
+rootProject.name = "Minecraft 3D — Three.js"
+include ':app'

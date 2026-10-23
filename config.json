@@ -1,0 +1,29 @@
+{
+  "_instructions": "Завантаж index.html на AppsGeyser.com → Create App → HTML/Website",
+  "app_name": "Minecraft 3D — Three.js",
+  "package_name": "com.minecraft3dt.app",
+  "description": "HTML Application",
+  "version": "1.0.0",
+  "theme_color": "#6200ea",
+  "orientation": "portrait",
+  "icon_emoji": "🚀",
+  "permissions": [
+    "INTERNET",
+    "FULLSCREEN"
+  ],
+  "permissions_detail": [
+    {
+      "name": "Інтернет",
+      "android": "android.permission.INTERNET",
+      "dangerous": false
+    },
+    {
+      "name": "Повноекранний режим",
+      "android": "android.permission.FULLSCREEN",
+      "dangerous": false
+    }
+  ],
+  "appsgeyser_url": "https://appsgeyser.com",
+  "pwa_ready": true,
+  "generated_at": "2026-10-23T20:27:05.590Z"
+}
