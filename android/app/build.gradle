@@ -3,5 +3,6 @@ android {
     namespace 'com.minecraft3dt.app'
     compileSdk 34
     defaultConfig { applicationId "com.minecraft3dt.app"; minSdk 24; targetSdk 34; versionCode 1; versionName "1.0.0" }
+    buildTypes { release { minifyEnabled false } }
 }
 dependencies { implementation 'androidx.appcompat:appcompat:1.6.1' }

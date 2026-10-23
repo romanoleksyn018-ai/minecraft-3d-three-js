@@ -5436,35 +5436,5 @@ T — чат (мультиплеєр) · F5 — вид з-за спини
 })();
 </script>
 
-
-<script>
-(function(){
-  var d=document.createElement('div');
-  d.style.cssText='position:fixed;inset:0;background:#050810;color:#00ff88;font-family:monospace;z-index:99999;padding:20px;overflow:auto;font-size:12px;line-height:1.6;';
-  d.innerHTML='<h2 style="color:#fff;margin-bottom:15px;">🔬 ДІАГНОСТИКА WEBVIEW</h2>';
-  document.body.appendChild(d);
-  function w(t,c){ d.innerHTML += '<div style="color:'+(c||'#00ff88')+'">> '+t+'</div>'; d.scrollTop = d.scrollHeight;}
-  
-  w('Перевірка мережі...', '#88aaff');
-  if(navigator.onLine) w('✅ Інтернет: ONLINE'); else w('❌ Інтернет: OFFLINE', '#ff4444');
-  
-  w('Перевірка камери...', '#88aaff');
-  if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-    navigator.mediaDevices.getUserMedia({video:true}).then(function(s){
-      w('✅ Камера: ДОЗВОЛЕНО'); s.getTracks().forEach(function(t){t.stop();});
-    }).catch(function(e){ w('❌ Камера: ВІДХИЛЕНО ('+e.name+')', '#ff4444'); });
-  } else w('❌ Камера: API не знайдено', '#ff4444');
-  
-  w('Перевірка GPS...', '#88aaff');
-  if(navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(function(p){
-      w('✅ GPS: ДОЗВОЛЕНО (Точність: '+p.coords.accuracy.toFixed(0)+'м)');
-    }, function(e){ w('❌ GPS: ВІДХИЛЕНО', '#ff4444'); });
-  } else w('❌ GPS: API не знайдено', '#ff4444');
-  
-  w('Перевірка сенсорів...', '#88aaff');
-  setTimeout(function(){ w('✅ Сенсори: ' + (window.DeviceOrientationEvent ? 'ДОСТУПНІ' : 'НЕ ЗНАЙДЕНО')); }, 1000);
-  
-})();
-</script></body>
+</body>
 </html>
