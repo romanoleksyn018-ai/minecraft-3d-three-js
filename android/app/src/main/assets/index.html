@@ -258,12 +258,6 @@
   #menu .mod b{flex:1}
   #menu .err{color:#ff7b7b;font-size:12px}
 </style>
-  <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#6200ea">
-  <meta name="mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-title" content="Minecraft 3D — Three.js">
-  <script>if('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js');</script>
 </head>
 <body>
 
@@ -5443,208 +5437,34 @@ T — чат (мультиплеєр) · F5 — вид з-за спини
 </script>
 
 
-  <style id="__diag_style">
-  #__diag_overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:#050810;color:#c8e8c8;font-family:'Courier New',monospace;font-size:11px;z-index:99999;display:flex;flex-direction:column;overflow:hidden}
-  #__diag_hdr{padding:10px 14px;background:#0a0f1e;border-bottom:1px solid #1a3a1a;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
-  #__diag_hdr h2{font-size:13px;color:#00ff88;margin:0;letter-spacing:1px}
-  #__diag_hdr span{font-size:9px;color:#4a6080}
-  #__diag_log{flex:1;overflow-y:auto;padding:10px 14px;line-height:1.9}
-  #__diag_log .ok{color:#00ff88}
-  #__diag_log .err{color:#ff4444}
-  #__diag_log .warn{color:#ffcc00}
-  #__diag_log .info{color:#66aaff}
-  #__diag_log .head{color:#ff88ff;font-weight:bold;margin-top:8px;border-top:1px solid #1a2a1a;padding-top:6px}
-  #__diag_log .val{color:#88ddff}
-  #__diag_bar{height:3px;background:#1a3a1a;flex-shrink:0}
-  #__diag_bar_fill{height:100%;background:linear-gradient(90deg,#00ff88,#00ddff);width:0;transition:width .3s}
-  #__diag_close{padding:10px 14px;border-top:1px solid #1a3a1a;flex-shrink:0;display:flex;gap:8px}
-  #__diag_close button{flex:1;padding:8px;background:transparent;border:1px solid #1a3a1a;color:#666680;border-radius:6px;cursor:pointer;font-family:'Courier New',monospace;font-size:10px}
-  #__diag_close button.primary{border-color:#00ff88;color:#00ff88}
-  </style>
-  <div id="__diag_overlay">
-    <div id="__diag_hdr"><h2>🔬 WebView Diagnostic</h2><span id="__diag_ts"></span></div>
-    <div id="__diag_bar"><div id="__diag_bar_fill"></div></div>
-    <div id="__diag_log"></div>
-    <div id="__diag_close">
-      <button class="primary" onclick="document.getElementById('__diag_overlay').style.display='none'">✅ Закрити та запустити додаток</button>
-      <button onclick="__diagRun()">🔄 Повторити</button>
-    </div>
-  </div>
-  <script>
-  (function(){
-  var _log=document.getElementById('__diag_log');
-  var _fill=document.getElementById('__diag_bar_fill');
-  var _ts=document.getElementById('__diag_ts');
-  var _total=0,_done=0;
-
-  function w(text,cls){
-    var d=document.createElement('div');
-    d.className=cls||'';d.innerHTML=text;
-    _log.appendChild(d);_log.scrollTop=_log.scrollHeight;
-  }
-  function setBar(pct){_fill.style.width=Math.min(100,pct)+'%';}
-  function section(title){w('▶ '+title,'head');}
-  function ok(label,val){w('  ✓ '+label+(val!==undefined?' <span class="val">→ '+val+'</span>':''),'ok');}
-  function err(label,msg){w('  ✗ '+label+(msg?' <span style="color:#ff6666">'+msg+'</span>':''),'err');}
-  function info(label,val){w('  ℹ '+label+(val!==undefined?' <span class="val">→ '+val+'</span>':''),'info');}
-  function warn(label,msg){w('  ⚠ '+label+(msg?' '+msg:''),'warn');}
-
-  async function __diagRun(){
-    _log.innerHTML='';_fill.style.width='0%';
-    _ts.textContent=new Date().toLocaleTimeString();
-    _total=0;_done=0;
-    var steps=[];
+<script>
+(function(){
+  var d=document.createElement('div');
+  d.style.cssText='position:fixed;inset:0;background:#050810;color:#00ff88;font-family:monospace;z-index:99999;padding:20px;overflow:auto;font-size:12px;line-height:1.6;';
+  d.innerHTML='<h2 style="color:#fff;margin-bottom:15px;">🔬 ДІАГНОСТИКА WEBVIEW</h2>';
+  document.body.appendChild(d);
+  function w(t,c){ d.innerHTML += '<div style="color:'+(c||'#00ff88')+'">> '+t+'</div>'; d.scrollTop = d.scrollHeight;}
   
-    // ── NETWORK & NAVIGATOR ──
-    steps.push(async function(){
-      section('Мережа та Navigator');
-      info('userAgent', navigator.userAgent.substring(0,60)+'...');
-      navigator.onLine ? ok('onLine','true') : warn('onLine','false — офлайн');
-      navigator.cookieEnabled ? ok('Cookies','enabled') : warn('Cookies','disabled');
-      if(navigator.connection){
-        ok('Connection type', navigator.connection.effectiveType||'n/a');
-        info('Downlink', (navigator.connection.downlink||0)+' Mbps');
-      } else { info('NetworkInformation API','не підтримується'); }
-      try{
-        var r=await fetch('https://api.ipify.org?format=json');
-        var d=await r.json();
-        ok('INTERNET fetch','✅ IP отримано (мережа працює)');
-      }catch(e){ err('INTERNET fetch','❌ '+e.message); }
-    });
+  w('Перевірка мережі...', '#88aaff');
+  if(navigator.onLine) w('✅ Інтернет: ONLINE'); else w('❌ Інтернет: OFFLINE', '#ff4444');
   
-    // ── CAMERA ──
-    steps.push(async function(){
-      section('Камера (getUserMedia)');
-      if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){
-        err('mediaDevices API','не доступний в цьому WebView'); return;
-      }
-      ok('mediaDevices API','доступний');
-      try{
-        var stream=await navigator.mediaDevices.getUserMedia({video:true,audio:false});
-        var tracks=stream.getVideoTracks();
-        ok('Camera permission','✅ ДОЗВОЛЕНО');
-        if(tracks.length){
-          var s=tracks[0].getSettings();
-          info('Роздільна здатність', (s.width||'?')+'×'+(s.height||'?'));
-          info('Пристрій',tracks[0].label||'(назва недоступна)');
-        }
-        stream.getTracks().forEach(function(t){t.stop();});
-      }catch(e){
-        if(e.name==='NotAllowedError') err('Camera permission','❌ ВІДХИЛЕНО користувачем');
-        else if(e.name==='NotFoundError') err('Camera','❌ Камера не знайдена');
-        else err('Camera error',e.name+': '+e.message);
-      }
-      try{
-        var devs=await navigator.mediaDevices.enumerateDevices();
-        var cams=devs.filter(function(d){return d.kind==='videoinput';});
-        info('Знайдено камер', cams.length);
-      }catch(e){}
-    });
+  w('Перевірка камери...', '#88aaff');
+  if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+    navigator.mediaDevices.getUserMedia({video:true}).then(function(s){
+      w('✅ Камера: ДОЗВОЛЕНО'); s.getTracks().forEach(function(t){t.stop();});
+    }).catch(function(e){ w('❌ Камера: ВІДХИЛЕНО ('+e.name+')', '#ff4444'); });
+  } else w('❌ Камера: API не знайдено', '#ff4444');
   
-    // ── GEOLOCATION ──
-    steps.push(async function(){
-      section('Геолокація');
-      if(!navigator.geolocation){ err('Geolocation API','не доступний'); return; }
-      ok('Geolocation API','доступний');
-      await new Promise(function(res){
-        navigator.geolocation.getCurrentPosition(
-          function(pos){
-            ok('GPS permission','✅ ДОЗВОЛЕНО');
-            info('Точність',pos.coords.accuracy.toFixed(0)+' м');
-            ok('Координати отримано','lat/lon доступні');
-            res();
-          },
-          function(e){
-            if(e.code===1) err('GPS permission','❌ ВІДХИЛЕНО (код '+e.code+')');
-            else warn('GPS',e.message);
-            res();
-          },
-          {timeout:5000,maximumAge:0}
-        );
-      });
-    });
+  w('Перевірка GPS...', '#88aaff');
+  if(navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(function(p){
+      w('✅ GPS: ДОЗВОЛЕНО (Точність: '+p.coords.accuracy.toFixed(0)+'м)');
+    }, function(e){ w('❌ GPS: ВІДХИЛЕНО', '#ff4444'); });
+  } else w('❌ GPS: API не знайдено', '#ff4444');
   
-    // ── SENSORS ──
-    steps.push(async function(){
-      section('Сенсори пристрою');
-      // DeviceMotion
-      await new Promise(function(res){
-        var handled=false;
-        var handler=function(e){
-          if(handled) return; handled=true;
-          window.removeEventListener('devicemotion',handler);
-          if(e.accelerationIncludingGravity&&e.accelerationIncludingGravity.x!==null){
-            ok('DeviceMotion (акселерометр)','✅ дані надходять');
-            info('Частота оновлення',e.interval?e.interval.toFixed(0)+'ms':'n/a');
-          } else { warn('DeviceMotion','подія є, але дані null'); }
-          res();
-        };
-        window.addEventListener('devicemotion',handler);
-        setTimeout(function(){if(!handled){handled=true;window.removeEventListener('devicemotion',handler);warn('DeviceMotion','відповіді немає (5s timeout)');res();}},5000);
-      });
-      // DeviceOrientation
-      await new Promise(function(res){
-        var handled=false;
-        var handler=function(e){
-          if(handled) return; handled=true;
-          window.removeEventListener('deviceorientation',handler);
-          (e.alpha!==null) ? ok('DeviceOrientation (гіроскоп)','✅ дані надходять') : warn('DeviceOrientation','дані null');
-          res();
-        };
-        window.addEventListener('deviceorientation',handler);
-        setTimeout(function(){if(!handled){handled=true;window.removeEventListener('deviceorientation',handler);warn('DeviceOrientation','timeout');res();}},5000);
-      });
-      // Battery
-      if(navigator.getBattery){
-        try{
-          var b=await navigator.getBattery();
-          ok('Battery API','✅ доступний');
-          info('Заряд',Math.round(b.level*100)+'% | '+(b.charging?'⚡ заряджається':'🔋 розряджається'));
-        }catch(e){ err('Battery API',e.message); }
-      } else { info('Battery API','не підтримується'); }
-    });
+  w('Перевірка сенсорів...', '#88aaff');
+  setTimeout(function(){ w('✅ Сенсори: ' + (window.DeviceOrientationEvent ? 'ДОСТУПНІ' : 'НЕ ЗНАЙДЕНО')); }, 1000);
   
-    // ── STORAGE & JS APIs ──
-    steps.push(async function(){
-      section('Сховище та JS API');
-      // localStorage
-      try{ localStorage.setItem('__diag','1'); localStorage.removeItem('__diag'); ok('localStorage','✅ працює'); }
-      catch(e){ err('localStorage',e.message); }
-      // sessionStorage
-      try{ sessionStorage.setItem('__diag','1'); sessionStorage.removeItem('__diag'); ok('sessionStorage','✅ працює'); }
-      catch(e){ err('sessionStorage',e.message); }
-      // IndexedDB
-      typeof indexedDB!=='undefined' ? ok('IndexedDB','✅ доступний') : err('IndexedDB','не підтримується');
-      // WebGL
-      try{
-        var c=document.createElement('canvas');
-        var gl=c.getContext('webgl')||c.getContext('experimental-webgl');
-        if(gl){ var r=gl.getParameter(gl.RENDERER); ok('WebGL','✅ '+( r||'OK')); }
-        else err('WebGL','не підтримується');
-      }catch(e){ err('WebGL',e.message); }
-      // Crypto
-      (typeof crypto!=='undefined'&&crypto.subtle) ? ok('Web Crypto API','✅ доступний') : warn('Web Crypto API','не доступний');
-      // SharedArrayBuffer
-      typeof SharedArrayBuffer!=='undefined' ? ok('SharedArrayBuffer','✅ доступний') : info('SharedArrayBuffer','не доступний (потрібен COEP/COOP)');
-    });
-  
-    // Run all steps
-    var pct=0;
-    for(var i=0;i<steps.length;i++){
-      await steps[i]();
-      pct=Math.round(((i+1)/steps.length)*100);
-      setBar(pct);
-      await new Promise(function(r){setTimeout(r,80);});
-    }
-    w('','');
-    w('✅ <b>Діагностика завершена</b> — переглянь результати вище','ok');
-    setBar(100);
-  }
-
-  window.__diagRun=__diagRun;
-  document.addEventListener('DOMContentLoaded',__diagRun);
-  if(document.readyState==='complete'||document.readyState==='interactive') setTimeout(__diagRun,200);
-  })();
-  </script>
-</body>
+})();
+</script></body>
 </html>
